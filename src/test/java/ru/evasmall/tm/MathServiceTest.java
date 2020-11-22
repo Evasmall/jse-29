@@ -35,17 +35,17 @@ class MathServiceTest {
 
 
     @Test
-    void factorialCorrect() {
-        assertEquals(1, mathService.factorial("0"));
-        assertEquals(24, mathService.factorial("4"));
+    void factorialLongCorrect() {
+        assertEquals(1, mathService.factorialLong("0"));
+        assertEquals(24, mathService.factorialLong("4"));
     }
 
     @Test
-    void factorialException() {
-        assertThrows(IllegalArgumentException.class, () -> mathService.factorial("-3"));
-        assertThrows(IllegalArgumentException.class, () -> mathService.factorial("строка"));
-        assertThrows(IllegalArgumentException.class, () -> mathService.factorial(""));
-        assertThrows(IllegalArgumentException.class, () -> mathService.factorial("99"));
+    void factorialLongException() {
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("-3"));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("строка"));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong(""));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("99"));
     }
 
     @Test

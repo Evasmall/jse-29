@@ -1,9 +1,11 @@
 package ru.evasmall.tm;
 
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MathService {
+
     /**
      * Метод вычисления суммы двух целых чисел.
      * @param arg1 - первое слагаемое
@@ -32,12 +34,26 @@ public class MathService {
     }
 
     /**
+     * Проверка на принадлежность к множеству целых чисел
+     * @param arg - Строковый аргумент
+     * @return - Конвертированное число Integer формата
+     */
+    public int toInteger (String arg) {
+        try {
+            return Integer.parseInt(arg);
+        } catch (Exception e) {
+            System.out.println("Аргумент не является целым числом. Ошибка формата.");
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
      * Проверка на отрицательные числа
      * @param arg - строковый аргумент
      * @return - Неотрицательное число формата long
      */
     private long isPlus (long arg){
-        if (arg <0) {
+        if (arg < 0) {
             System.out.println("Аргумент является отрицательным числом. Ошибка.");
             throw new IllegalArgumentException();
         }
@@ -45,12 +61,38 @@ public class MathService {
     }
 
     /**
-     * Метод вычисления факториала неотрицательного целого числа.
+     * Проверка на отрицательные числа
      * @param arg - строковый аргумент
-     * @return - факториал числа
+     * @return - Неотрицательное число формата int
+     */
+    private int isPlus (int arg){
+        if (arg < 0) {
+            System.out.println("Аргумент является отрицательным числом. Ошибка.");
+            throw new IllegalArgumentException();
+        }
+        return arg;
+    }
+
+    /**
+     * Проверка числа потоков на отрицательные числа и равенство нулю
+     * @param arg - строковый аргумент
+     * @return - Неотрицательное число формата int
+     */
+    public int isThreadPlus (int arg){
+        if (arg < 1) {
+            System.out.println("Число потоков не может быть отрицательным числом или равным нулю. Ошибка.");
+            throw new IllegalArgumentException();
+        }
+        return arg;
+    }
+
+    /**
+     * Метод вычисления факториала неотрицательного целого числа формата Long.
+     * @param arg - строковый аргумент
+     * @return - факториал числа формата Long
      * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
      */
-    public long factorial(String arg) {
+    public long factorialLong(String arg) {
         long argLong = isPlus(toLong(arg));
         long result = 1;
         for (long i = 1; i <= argLong; i++) {
@@ -60,6 +102,42 @@ public class MathService {
                 System.out.println("Переполнение буфера. Ошибка вычислений.");
                 throw new IllegalArgumentException();
             }
+        }
+        return result;
+    }
+
+    /**
+     * Метод вычисления факториала неотрицательного целого числа формата BigInteger.
+     * @param arg - строковый аргумент
+     * @return - факториал числа формата BigInteger
+     * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
+     */
+    public BigInteger factorialBigInteger(String arg, int threadsCount) {
+        int argInt = isPlus(toInteger(arg));
+        int distance = argInt/threadsCount;
+        System.out.println("Интервал = " + distance);
+        if (distance < 1) {
+            distance = 1;
+        }
+        BigInteger result = BigInteger.valueOf(1);
+        List<FactorialThread> factorialThreads = new LinkedList<>();
+        for (int i = 1; i <= argInt; i = i + distance) {
+            int start = i;
+            int end = i + distance -1;
+            if(end >= argInt) {
+                end = argInt;
+            }
+            factorialThreads.add(new FactorialThread(start, end));
+        }
+        for (FactorialThread factorialThread : factorialThreads) {
+            Thread thread = new Thread(factorialThread);
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            result = result.multiply(factorialThread.getResult());
         }
         return result;
     }

@@ -42,10 +42,21 @@ public class Main
                     System.out.println("Сумма чисел: " + arg1 + " + " + arg2 + " = " + mathService.sum(arg1, arg2));
                     return RETURN_OK;
                 }
-                case FACTORIAL: {
+                case FACTORIAL_LONG: {
                     System.out.println("Введите число:");
                     String arg = scannerArg.nextLine();
-                    System.out.println("Факториал числа: " + arg + "! = " + mathService.factorial(arg));
+                    System.out.println("Факториал числа: " + arg + "! = " + mathService.factorialLong(arg));
+                    return RETURN_OK;
+                }
+                case FACTORIAL_BIGINTEGER: {
+                    System.out.println("Введите число:");
+                    String arg = scannerArg.nextLine();
+                    System.out.println("Введите число потоков:");
+                    String threadsCountString = scannerArg.nextLine();
+                    int threadsCount = mathService.isThreadPlus(mathService.toInteger(threadsCountString));
+                    long startTime = System.currentTimeMillis();
+                    System.out.println("Факториал числа: " + arg + "! = " + mathService.factorialBigInteger(arg, threadsCount));
+                    System.out.println("Временной интервал вычислений: " + (System.currentTimeMillis() - startTime) + "ms.");
                     return RETURN_OK;
                 }
                 case FIBONACCI: {
@@ -72,7 +83,8 @@ public class Main
     private static int displayHelp() {
         System.out.println("help - Перечень команд.");
         System.out.println("sum - Сумма чисел.");
-        System.out.println("factorial - Вычисление факториала.");
+        System.out.println("factorial_long - Вычисление факториала чисел формата Long.");
+        System.out.println("factorial_biginteger - Вычисление факториала чисел формата BigInteger.");
         System.out.println("fibonacci - Разложение числа на сумму числе Фибоначчи.");
         System.out.println("exit - Завершение программы.");
         return RETURN_OK;
