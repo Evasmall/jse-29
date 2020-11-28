@@ -3,6 +3,7 @@ package ru.evasmall.tm;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class MathService {
 
@@ -28,8 +29,8 @@ public class MathService {
         try {
             return Long.parseLong(arg);
         } catch (Exception e) {
-            System.out.println("Аргумент не является целым числом. Ошибка формата.");
-            throw new IllegalArgumentException(e);
+            System.out.println();
+            throw new IllegalArgumentException(e +" Аргумент не является целым числом. Ошибка формата.");
         }
     }
 
@@ -42,8 +43,8 @@ public class MathService {
         try {
             return Integer.parseInt(arg);
         } catch (Exception e) {
-            System.out.println("Аргумент не является целым числом. Ошибка формата.");
-            throw new IllegalArgumentException(e);
+            System.out.println();
+            throw new IllegalArgumentException(e +" Аргумент не является целым числом. Ошибка формата.");
         }
     }
 
@@ -54,8 +55,7 @@ public class MathService {
      */
     private long isPlus (long arg){
         if (arg < 0) {
-            System.out.println("Аргумент является отрицательным числом. Ошибка.");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Аргумент является отрицательным числом. Ошибка.");
         }
         return arg;
     }
@@ -67,8 +67,7 @@ public class MathService {
      */
     private int isPlus (int arg){
         if (arg < 0) {
-            System.out.println("Аргумент является отрицательным числом. Ошибка.");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Аргумент является отрицательным числом. Ошибка.");
         }
         return arg;
     }
@@ -80,8 +79,7 @@ public class MathService {
      */
     public int isThreadPlus (int arg){
         if (arg < 1) {
-            System.out.println("Число потоков не может быть отрицательным числом или равным нулю. Ошибка.");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Число потоков не может быть отрицательным числом или равным нулю. Ошибка.");
         }
         return arg;
     }
@@ -139,6 +137,42 @@ public class MathService {
             }
             result = result.multiply(factorialThread.getResult());
         }
+        return result;
+    }
+
+    /**
+     * Метод вычисления факториала неотрицательного целого числа формата BigInteger без использования класса Thread и synchronized блоков.
+     * @param arg - строковый аргумент
+     * @return - факториал числа формата BigInteger
+     * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
+     */
+    public BigInteger factorialNoThread(String arg, int threadsCount) {
+        int argInt = isPlus(toInteger(arg));
+        int distance = argInt/threadsCount;
+        System.out.println("Интервал = " + distance);
+        if (distance < 1) {
+            distance = 1;
+        }
+        BigInteger result = BigInteger.valueOf(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
+        List<Callable<BigInteger>> tasks = new LinkedList<>();
+        for (int i = 1; i <= argInt; i = i + distance) {
+            int start = i;
+            int end = i + distance -1;
+            if(end >= argInt) {
+                end = argInt;
+            }
+            tasks.add(new FactorialCallable(start, end));
+        }
+        try {
+            List<Future<BigInteger>> futureList = executorService.invokeAll(tasks);
+            for (Future<BigInteger> future : futureList) {
+                result = result.multiply(future.get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        executorService.shutdown();
         return result;
     }
 

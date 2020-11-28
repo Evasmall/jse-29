@@ -35,17 +35,30 @@ class MathServiceTest {
 
 
     @Test
-    void factorialLongCorrect() {
+    void factorialCorrect() {
         assertEquals(1, mathService.factorialLong("0"));
         assertEquals(24, mathService.factorialLong("4"));
+        assertEquals("1", mathService.factorialBigInteger("0", 2).toString());
+        assertEquals("24", mathService.factorialBigInteger("4", 2).toString());
+        assertEquals("1", mathService.factorialNoThread("0", 2).toString());
+        assertEquals("24", mathService.factorialNoThread("4", 2).toString());
     }
 
     @Test
-    void factorialLongException() {
+    void factorialException() {
         assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("-3"));
         assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("строка"));
         assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong(""));
         assertThrows(IllegalArgumentException.class, () -> mathService.factorialLong("99"));
+
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialBigInteger("-3",5));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialBigInteger("строка", 5));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialBigInteger("", 5));
+
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialNoThread("-3", 3));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialNoThread("строка", 3));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialNoThread("", 2));
+        assertThrows(IllegalArgumentException.class, () -> mathService.factorialNoThread("5", -5));
     }
 
     @Test

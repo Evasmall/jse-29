@@ -43,24 +43,35 @@ public class Main
                     return RETURN_OK;
                 }
                 case FACTORIAL_LONG: {
-                    System.out.println("Введите число:");
+                    System.out.println(ENTER_NUMBER);
                     String arg = scannerArg.nextLine();
-                    System.out.println("Факториал числа: " + arg + "! = " + mathService.factorialLong(arg));
+                    System.out.println(FACTORIAL_EQUALLY + arg + "! = " + mathService.factorialLong(arg));
                     return RETURN_OK;
                 }
                 case FACTORIAL_BIGINTEGER: {
-                    System.out.println("Введите число:");
+                    System.out.println(ENTER_NUMBER);
                     String arg = scannerArg.nextLine();
                     System.out.println("Введите число потоков:");
                     String threadsCountString = scannerArg.nextLine();
                     int threadsCount = mathService.isThreadPlus(mathService.toInteger(threadsCountString));
                     long startTime = System.currentTimeMillis();
-                    System.out.println("Факториал числа: " + arg + "! = " + mathService.factorialBigInteger(arg, threadsCount));
+                    System.out.println(FACTORIAL_EQUALLY + arg + "! = " + mathService.factorialBigInteger(arg, threadsCount));
+                    System.out.println("Временной интервал вычислений: " + (System.currentTimeMillis() - startTime) + "ms.");
+                    return RETURN_OK;
+                }
+                case FACTORIAL_NO_THREAD: {
+                    System.out.println(ENTER_NUMBER);
+                    String arg = scannerArg.nextLine();
+                    System.out.println("Введите число потоков:");
+                    String threadsCountString = scannerArg.nextLine();
+                    int threadsCount = mathService.isThreadPlus(mathService.toInteger(threadsCountString));
+                    long startTime = System.currentTimeMillis();
+                    System.out.println(FACTORIAL_EQUALLY + arg + "! = " + mathService.factorialNoThread(arg, threadsCount));
                     System.out.println("Временной интервал вычислений: " + (System.currentTimeMillis() - startTime) + "ms.");
                     return RETURN_OK;
                 }
                 case FIBONACCI: {
-                    System.out.println("Введите число:");
+                    System.out.println(ENTER_NUMBER);
                     String arg = scannerArg.nextLine();
                     System.out.println("Разложение числа " + arg + " на сумму чисел Фибоначчи: " + Arrays.toString(mathService.fibonacci(arg)));
                     return RETURN_OK;
@@ -85,6 +96,7 @@ public class Main
         System.out.println("sum - Сумма чисел.");
         System.out.println("factorial_long - Вычисление факториала чисел формата Long.");
         System.out.println("factorial_biginteger - Вычисление факториала чисел формата BigInteger.");
+        System.out.println("factorial_no_thread - Вычисление факториала чисел формата BigInteger без Thread и synchronized блоков.");
         System.out.println("fibonacci - Разложение числа на сумму числе Фибоначчи.");
         System.out.println("exit - Завершение программы.");
         return RETURN_OK;
