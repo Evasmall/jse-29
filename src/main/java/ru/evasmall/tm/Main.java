@@ -70,6 +70,14 @@ public class Main
                     System.out.println("Временной интервал вычислений: " + (System.currentTimeMillis() - startTime) + "ms.");
                     return RETURN_OK;
                 }
+                case FACTORIAL_STREAM: {
+                    System.out.println(ENTER_NUMBER);
+                    String arg = scannerArg.nextLine();
+                    long startTime = System.currentTimeMillis();
+                    System.out.println(FACTORIAL_EQUALLY + arg + "! = " + mathService.factorialStream(arg));
+                    System.out.println("Временной интервал вычислений: " + (System.currentTimeMillis() - startTime) + "ms.");
+                    return RETURN_OK;
+                }
                 case FIBONACCI: {
                     System.out.println(ENTER_NUMBER);
                     String arg = scannerArg.nextLine();
@@ -97,6 +105,7 @@ public class Main
         System.out.println("factorial_long - Вычисление факториала чисел формата Long.");
         System.out.println("factorial_biginteger - Вычисление факториала чисел формата BigInteger.");
         System.out.println("factorial_no_thread - Вычисление факториала чисел формата BigInteger без Thread и synchronized блоков.");
+        System.out.println("factorial_stream - Вычисление факториала чисел формата BigInteger средствами Stream API.");
         System.out.println("fibonacci - Разложение числа на сумму числе Фибоначчи.");
         System.out.println("exit - Завершение программы.");
         return RETURN_OK;

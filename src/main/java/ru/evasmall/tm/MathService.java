@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.IntStream;
 
 public class MathService {
 
@@ -107,6 +108,7 @@ public class MathService {
     /**
      * Метод вычисления факториала неотрицательного целого числа формата BigInteger.
      * @param arg - строковый аргумент
+     * @param threadsCount - число потоков
      * @return - факториал числа формата BigInteger
      * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
      */
@@ -143,6 +145,7 @@ public class MathService {
     /**
      * Метод вычисления факториала неотрицательного целого числа формата BigInteger без использования класса Thread и synchronized блоков.
      * @param arg - строковый аргумент
+     * @param threadsCount - число потоков
      * @return - факториал числа формата BigInteger
      * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
      */
@@ -174,6 +177,18 @@ public class MathService {
         }
         executorService.shutdown();
         return result;
+    }
+
+    /**
+     * Метод вычисления факториала неотрицательного целого числа формата BigInteger средствами Stream API.
+     * @param arg - строковый аргумент
+     * @return - факториал числа формата BigInteger
+     * @throws IllegalArgumentException - исключение, если одно из слагаемых не является целым или положительным числом
+     */
+    public BigInteger factorialStream(String arg) {
+        int argInt = isPlus(toInteger(arg));
+        if(argInt < 2) return BigInteger.valueOf(1);
+        return IntStream.rangeClosed(2, argInt).parallel().mapToObj(BigInteger::valueOf).reduce(BigInteger::multiply).get();
     }
 
     /**
